@@ -6,7 +6,7 @@ const { routesInit } = require("./routes/config_routes"); // import routesInit()
 require("./db/mongoConnect"); // Links the mongo to app
 require('dotenv').config()
 const fileUpload = require("express-fileupload"); // Upload files
-const bodyParser = require('body-parser');
+
 
 const app = express(); // app of express        
 app.use(cors()) // cors between the defrent client
