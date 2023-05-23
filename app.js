@@ -22,7 +22,7 @@ app.use(express.json({ limits: "15mb" }));
 // app of jsons
 // app.use(express.static(path.join(__dirname, "public")));
 // the public directory is always accessible 
-app.use(express.static(path.join(__dirname, "public/build")));
+app.use(express.static(path.join(__dirname, "public/")));
 
 routesInit(app);
 
