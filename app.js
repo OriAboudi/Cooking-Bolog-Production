@@ -18,12 +18,19 @@ app.use(fileUpload({
 
 app.use(express.json({ limits: "15mb" }));
 
-routesInit(app);
 
 // app of jsons
 // app.use(express.static(path.join(__dirname, "public")));
 // the public directory is always accessible 
-app.use(express.static(path.join(__dirname, "public/")));
+app.use(express.static(path.join(__dirname, "public/build")));
+
+routesInit(app);
+
+app.get('/*', function (req, res) {
+    const filePath = path.join(__dirname, 'public', 'build', 'index.html');
+    res.sendFile(filePath);
+})
+
 
 
 
