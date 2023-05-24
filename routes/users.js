@@ -1,7 +1,7 @@
 const express = require("express"); //Express module
 const bcrypt = require("bcrypt"); //Bcrypt module
 const { validateUser, UserModel, validateLogin, genToken } = require("../models/userModel"); //import funcs from userModel
-const { auth } = require("../middlewares/atuh"); //import funcs from auth to valid token
+const { auth, authAdmin } = require("../middlewares/atuh"); //import funcs from auth to valid token
 const { PasswordResetModel } = require("../models/passwordResetModel");
 const { sendResetPasswordEmail } = require("../helpers/sendEmail");
 const router = express.Router(); //to create Route
@@ -143,7 +143,7 @@ router.post("/toggleFav", auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authAdmin, async (req, res) => {
     try {
         let user = await UserModel.deleteOne({ _id: req.params.id })
         res.status(200).json({ msg: "deleted", user })
@@ -153,7 +153,7 @@ router.delete('/:id', async (req, res) => {
         res.status(502).json({ err })
     }
 })
-router.patch("/role/:id", async (req, res) => {
+router.patch("/role/:id", authAdmin, async (req, res) => {
     try {
         let user_id = req.params.id;
         let role = req.query.role;

@@ -1,14 +1,9 @@
 
 const express = require("express");
-const { auth } = require("../middlewares/atuh");
-
+const { authAdmin } = require("../middlewares/atuh");
 const { CategoryModel, validateCategory } = require("../models/categoryModel");
-const { RecipeModel } = require("../models/recipeModel");
+
 const router = express.Router();
-
-
-
-
 
 router.get("/", async (req, res) => {
     try {
@@ -30,8 +25,6 @@ router.get("/nameAndCat", async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
-
 router.get("/byPop", async (req, res) => {
     let skip = Number(req.query.skip) || 1;
     let limit = Number(req.query.limit) || 12;
@@ -73,7 +66,6 @@ router.get('/byCode/:url_code', async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
 router.get('/countDocument/:url_code', async (req, res) => {
     let skip = Number(req.query.page) || 1;
     let limit = Number(req.query.limit) || 8;
@@ -93,9 +85,6 @@ router.get('/countDocument/:url_code', async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
-
-
 router.get("/:id", async (req, res) => {
     let skip = Number(req.query.page) || 1;
     let limit = Number(req.query.limit) || 12;
@@ -117,7 +106,7 @@ router.get("/:id", async (req, res) => {
         res.status(502).json({ err })
     }
 })
-router.post('/', auth, async (req, res) => {
+router.post('/', authAdmin, async (req, res) => {
     let validBody = validateCategory(req.body)
     if (validBody.error) {
         return res.status(500).json(validBody.error.details)
@@ -133,7 +122,7 @@ router.post('/', auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-router.put('/update/:id', auth, async (req, res) => {
+router.put('/update/:id', authAdmin, async (req, res) => {
     let validBody = validateCategory(req.body)
     if (validBody.error) {
         return res.status(500).json(validBody.error.details)
@@ -148,7 +137,7 @@ router.put('/update/:id', auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-router.delete('/del/:id', auth, async (req, res) => {
+router.delete('/del/:id', authAdmin, async (req, res) => {
     try {
         let _id = req.params.id;
         let data = await CategoryModel.deleteOne({ _id: _id });

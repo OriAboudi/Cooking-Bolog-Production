@@ -1,13 +1,11 @@
 
-const express = require("express");
-
-
-const { auth, fileUpload } = require("../middlewares/atuh");
+const express = require("express")
+const { auth, fileUpload, authAdmin } = require("../middlewares/atuh");
 const { CategoryModel } = require("../models/categoryModel");
 const { RecipeModel, validateRecipe } = require("../models/recipeModel");
 const { UserModel } = require("../models/userModel");
 const router = express.Router();
-//TODO: Creat route of pages
+
 
 router.get("/", async (req, res) => {
     let page = Number(req.query.page) || 1;
@@ -25,7 +23,6 @@ router.get("/", async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
 router.get("/popular", async (req, res) => {
     let page = Number(req.query.page) || 1;
     let perPage = Number(req.query.perPage) || 16;
@@ -42,7 +39,6 @@ router.get("/popular", async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
 router.get("/graphRating", async (req, res) => {
     try {
         let data = await RecipeModel.find({})
@@ -53,7 +49,6 @@ router.get("/graphRating", async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
 router.get("/search", async (req, res) => {
     const skip = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 12;
@@ -72,7 +67,6 @@ router.get("/search", async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
 router.get("/:id", async (req, res) => {
     try {
         let data = await RecipeModel.findOne({ _id: req.params.id }).populate('comments_id')
@@ -83,7 +77,6 @@ router.get("/:id", async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
 router.get("/recipeUser", auth, async (req, res) => {
 
     try {
@@ -97,7 +90,6 @@ router.get("/recipeUser", auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
 router.get("/rating", auth, async (req, res) => {
     try {
         let data = await RecipeModel.find({ rating: { $gt: 4 } })
@@ -108,7 +100,6 @@ router.get("/rating", auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
 router.get("/recentRecipe", auth, async (req, res) => {
     try {
         let data = await RecipeModel.find({})
@@ -122,9 +113,6 @@ router.get("/recentRecipe", auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
-
-
 router.get("/pages/count", async (req, res) => {
     let perPage = Number(req.query.perPage) || 15;
     let category = req.query.category;
@@ -155,10 +143,6 @@ router.get("/pages/count", async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
-//TODO: creaet a route that return all recipes with query ingredents
-
-
 router.post('/', auth, fileUpload, async (req, res) => {
 
     let validBody = validateRecipe(req.body)
@@ -194,29 +178,7 @@ router.post('/', auth, fileUpload, async (req, res) => {
         res.status(502).json({ err })
     }
 });
-
-
-
-// router.put('/update/:id', auth, async (req, res) => {
-//     let validBody = validateRecipe(req.body);
-//     if (validBody.error) {
-//         return res.status(500).json(validBody.error.details)
-//     }
-//     try {
-//         let id = req.params.id;
-//         let updated = req.body
-//         let { category } = await CategoryModel.findOne({})
-//         let data = await RecipeModel.updateOne({ _id: id }, updated)
-//         res.status(200).json({ data, updated })
-//     }
-//     catch (err) {
-//         console.log(err);
-//         res.status(502).json({ err })
-//     }
-// })
-
-
-router.put('/update/:id', auth, async (req, res) => {
+router.put('/update/:id', authAdmin, async (req, res) => {
     let id = req.params.id; // id of recipe 
     let newRecipe = req.body
     let validBody = validateRecipe(req.body);
@@ -257,8 +219,7 @@ router.put('/update/:id', auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
-router.delete('/del/:id', auth, async (req, res) => {
+router.delete('/del/:id', authAdmin, async (req, res) => {
     try {
         let id = req.params.id
         let data = await RecipeModel.deleteOne({ _id: id })
@@ -269,19 +230,4 @@ router.delete('/del/:id', auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
-
 module.exports = router;
-
-
-// const myArray = [1, 2, 3, 4, 5];
-
-// // Find the index of the element with the value 3
-// const index = myArray.indexOf(3);
-
-// // If the element exists in the array, remove it
-// if (index !== -1) {
-//   myArray.splice(index, 1);
-// }
-
-// console.log(myArray); // Output: [1, 2, 4, 5]

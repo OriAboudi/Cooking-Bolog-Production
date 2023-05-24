@@ -7,7 +7,6 @@ const router = express.Router();
 router.get("/", (req, res) => {
     res.json({ msg: "Welcome to my rating " });
 });
-
 const calculateAverageRating = async (recipeId) => {
 
     const result = await RatingModel.aggregate([
@@ -26,7 +25,6 @@ const calculateAverageRating = async (recipeId) => {
 
     return result[0].averageRating;
 }
-
 router.get("/:recipeId", auth, async (req, res) => {
     const recipeId = req.params.recipeId;
     try {
@@ -38,7 +36,6 @@ router.get("/:recipeId", auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
 router.post('/:recipeId', auth, async (req, res) => {
     let validBody = validateRating(req.body)
     if (validBody.error) {
@@ -70,7 +67,6 @@ router.post('/:recipeId', auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
 router.put('/update/:recipeId/ratings/:ratingId', auth, async (req, res) => {
     let validBody = validateRating(req.body);
     if (validBody.error) {
@@ -90,7 +86,6 @@ router.put('/update/:recipeId/ratings/:ratingId', auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
 router.delete('/del/:recipeId/ratings/:ratingId', auth, async (req, res) => {
     const recipeId = req.params.recipeId;
     const ratingId = req.params.ratingId;
@@ -107,8 +102,4 @@ router.delete('/del/:recipeId/ratings/:ratingId', auth, async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 })
-
-
-
-
 module.exports = router;

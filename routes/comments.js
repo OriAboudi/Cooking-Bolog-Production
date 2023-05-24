@@ -9,7 +9,6 @@ const router = express.Router();
 router.get("/", (req, res) => {
     res.json({ msg: "Welcome to my comments " });
 }) 
-
 router.get("/:recipeId", auth, async (req, res) => {
 
     try {
@@ -22,7 +21,6 @@ router.get("/:recipeId", auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-  
 router.post('/:recipeId', auth, async (req, res) => {   
     let validBody = validateComment(req.body)
     if (validBody.error) {
@@ -61,7 +59,6 @@ router.post('/:recipeId', auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
 router.put('/update/:commentId', auth, async (req, res) => {
     let validBody = validateComment(req.body);
     if (validBody.error) {
@@ -78,7 +75,6 @@ router.put('/update/:commentId', auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
 router.delete('/del/:delId', auth, async (req, res) => {
     try {
         let delId = req.params.delId
@@ -90,9 +86,4 @@ router.delete('/del/:delId', auth, async (req, res) => {
         res.status(502).json({ err })
     }
 })
-
-
-
-
-
 module.exports = router;
